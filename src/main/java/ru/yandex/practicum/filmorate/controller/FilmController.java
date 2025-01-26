@@ -5,9 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,10 +94,8 @@ public class FilmController {
         throw new ValidationException("Фильм с id = " + newfilm.getId() + " не найден");
     }
 
-    private boolean isReleaseDateBefore(Instant releaseDate) {
-        ZonedDateTime dec28Year1895 = ZonedDateTime.of(1895, 12, 28, 0,
-                0, 0, 0, ZoneOffset.UTC);
-        Instant cutOffDate = dec28Year1895.toInstant();
+    private boolean isReleaseDateBefore(LocalDate releaseDate) {
+        LocalDate cutOffDate = LocalDate.of(1895,12,28);
         return releaseDate.isBefore(cutOffDate);
     }
 

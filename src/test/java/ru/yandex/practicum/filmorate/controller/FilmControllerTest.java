@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ class FilmControllerTest {
         Film film = new Film();
         film.setName("Inception");
         film.setDescription("A mind-bending thriller");
-        film.setReleaseDate(Instant.parse("2010-07-16T00:00:00Z"));
+        film.setReleaseDate(LocalDate.of(2010,7,16));
         film.setDuration(Duration.ofMinutes(148));
         // Добавляем фильм и проверяем результат
         Film addedFilm = filmController.postFilm(film);
@@ -40,7 +41,7 @@ class FilmControllerTest {
         Film film = new Film();
         film.setName(" ");
         film.setDescription("Description");
-        film.setReleaseDate(Instant.parse("2022-01-01T00:00:00Z"));
+        film.setReleaseDate(LocalDate.of(2022,1,1));
         film.setDuration(Duration.ofMinutes(120));
         // Проверяем, что метод postFilm выбросит ValidationException
         ValidationException exception = assertThrows(ValidationException.class, () -> filmController.postFilm(film));
@@ -53,13 +54,13 @@ class FilmControllerTest {
         Film film1 = new Film();
         film1.setName("Film 1");
         film1.setDescription("Description 1");
-        film1.setReleaseDate(Instant.parse("2020-01-01T00:00:00Z"));
+        film1.setReleaseDate(LocalDate.of(2020,1,1));
         film1.setDuration(Duration.ofMinutes(120));
 
         Film film2 = new Film();
         film2.setName("Film 2");
         film2.setDescription("Description 2");
-        film2.setReleaseDate(Instant.parse("2021-01-01T00:00:00Z"));
+        film2.setReleaseDate(LocalDate.of(2021,1,1));
         film2.setDuration(Duration.ofMinutes(90));
 
         filmController.postFilm(film1);
@@ -76,7 +77,7 @@ class FilmControllerTest {
         Film film = new Film();
         film.setName("Inception");
         film.setDescription("A mind-bending thriller");
-        film.setReleaseDate(Instant.parse("2010-07-16T00:00:00Z"));
+        film.setReleaseDate(LocalDate.of(2010,7,16));
         film.setDuration(Duration.ofMinutes(148));
         // Добавляем фильм и проверяем результат
         Film addedFilm = filmController.postFilm(film);

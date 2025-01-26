@@ -16,6 +16,6 @@ public class User {
     String login;
     @Schema(description = "Имя пользователя", example = "sergei")
     String name;
-    @Schema(description = "Дата рождения пользователя", example = "1998-02-11T10:00:00Z")
+    @Schema(description = "Дата рождения пользователя", example = "1998-02-11")
     LocalDate birthday;
 }
