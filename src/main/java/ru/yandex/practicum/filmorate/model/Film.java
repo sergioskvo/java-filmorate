@@ -4,12 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @Schema(description = "Фильм")
 public class Film {
