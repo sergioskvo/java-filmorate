@@ -97,9 +97,9 @@ public class FilmController {
     }
 
     private boolean isReleaseDateBefore(Instant releaseDate) {
-        ZonedDateTime dec28_1895 = ZonedDateTime.of(1895, 12, 28, 0,
+        ZonedDateTime dec28Year1895 = ZonedDateTime.of(1895, 12, 28, 0,
                 0, 0, 0, ZoneOffset.UTC);
-        Instant cutOffDate = dec28_1895.toInstant();
+        Instant cutOffDate = dec28Year1895.toInstant();
         return releaseDate.isBefore(cutOffDate);
     }
 
