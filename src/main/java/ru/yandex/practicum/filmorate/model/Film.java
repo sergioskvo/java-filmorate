@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -19,4 +20,9 @@ public class Film {
     LocalDate releaseDate;
     @Schema(description = "Продолжительность фильма", example = "P0DT2H22M")
     Duration duration;
+
+    @JsonGetter("duration")
+    public long getDurationInSeconds() {
+        return duration != null ? duration.getSeconds() : 0; // возвращаем количество секунд
+    }
 }
