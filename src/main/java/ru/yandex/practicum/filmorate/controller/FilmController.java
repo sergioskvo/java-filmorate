@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -23,18 +26,9 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film postFilm(@RequestBody Film film) {
+    public ResponseEntity<Film> postFilm(@Valid @RequestBody Film film) {
         log.info("Вводные данные:\n name: {}\n description: {}\n releaseDate: {}\n duration: {}",
                 film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.error("Имя фильма пустое:\n name: {}", film.getName());
-            throw new ValidationException("ОШИБКА! Некорректное имя фильма");
-        }
-        if (film.getDescription().length() > 200) {
-            log.error("Описание длиннее 200 символов:\n description: {}\n description_length: {}",
-                    film.getDescription(), film.getDescription().length());
-            throw new ValidationException("ОШИБКА! Слишком длинное описание");
-        }
         if (isReleaseDateBefore(film.getReleaseDate())) {
             log.error("Дата релиза фильма раньше 28 декабря 1895г:\n releaseDate: {}",
                     film.getReleaseDate());
@@ -49,11 +43,11 @@ public class FilmController {
         filmsMap.put(film.getId(), film);
         log.info("Сохранен фильм:\n id: {}\n name: {}\n description: {}\n releaseDate: {}\n duration: {}",
                 film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
-        return film;
+        return ResponseEntity.status(HttpStatus.CREATED).body(film);
     }
 
     @PutMapping
-    public Film putFilm(@RequestBody Film newfilm) {
+    public ResponseEntity<Film> putFilm(@RequestBody Film newfilm) {
         log.info("Вводные данные:\n id: {}\n name: {}\n description: {}\n releaseDate: {}\n duration: {}",
                 newfilm.getId(), newfilm.getName(), newfilm.getDescription(), newfilm.getReleaseDate(),
                 newfilm.getDuration());
@@ -63,15 +57,6 @@ public class FilmController {
         }
         if (filmsMap.containsKey(newfilm.getId())) {
             Film oldfilm = filmsMap.get(newfilm.getId());
-            if (newfilm.getName() == null || newfilm.getName().isBlank()) {
-                log.error("Имя фильма пустое:\n name: {}", newfilm.getName());
-                throw new ValidationException("ОШИБКА! Некорректное имя фильма");
-            }
-            if (newfilm.getDescription().length() > 200) {
-                log.error("Описание длиннее 200 символов:\n description: {}\n description_length: {}",
-                        newfilm.getDescription(), newfilm.getDescription().length());
-                throw new ValidationException("ОШИБКА! Слишком длинное описание");
-            }
             if (isReleaseDateBefore(newfilm.getReleaseDate())) {
                 log.error("Дата релиза фильма раньше 28 декабря 1895г:\n releaseDate: {}",
                         newfilm.getReleaseDate());
@@ -89,7 +74,7 @@ public class FilmController {
             oldfilm.setDuration(newfilm.getDuration());
             log.info("Обновленный фильм:\n name: {}\n description: {}\n releaseDate: {}\n duration: {}",
                     oldfilm.getName(), oldfilm.getDescription(), oldfilm.getReleaseDate(), oldfilm.getDuration());
-            return oldfilm;
+            return ResponseEntity.status(HttpStatus.OK).body(oldfilm);
         }
         throw new ValidationException("Фильм с id = " + newfilm.getId() + " не найден");
     }

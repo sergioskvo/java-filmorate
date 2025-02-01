@@ -1,19 +1,26 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
 
     private FilmController filmController;
+    private Validator validator;
 
     @BeforeEach
     void setUp() {
@@ -29,22 +36,26 @@ class FilmControllerTest {
         film.setReleaseDate(LocalDate.of(2010,7,16));
         film.setDuration(Duration.ofMinutes(148));
         // Добавляем фильм и проверяем результат
-        Film addedFilm = filmController.postFilm(film);
-        assertNotNull(addedFilm.getId());
-        assertEquals("Inception", addedFilm.getName());
+        ResponseEntity<Film> addedFilm = filmController.postFilm(film);
+        assertNotNull(addedFilm.getBody().getId());
+        assertEquals("Inception", addedFilm.getBody().getName());
         assertEquals(1, filmController.getFilms().size());
     }
 
     @Test
     void shouldFailWhenFilmNameIsBlank() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        this.validator = factory.getValidator();
         Film film = new Film();
         film.setName(" ");
         film.setDescription("Description");
         film.setReleaseDate(LocalDate.of(2022,1,1));
         film.setDuration(Duration.ofMinutes(120));
         // Проверяем, что метод postFilm выбросит ValidationException
-        ValidationException exception = assertThrows(ValidationException.class, () -> filmController.postFilm(film));
-        assertEquals("ОШИБКА! Некорректное имя фильма", exception.getMessage());
+        Set<ConstraintViolation<Film>> violations = validator.validate(film);
+        assertFalse(violations.isEmpty());
+        assertEquals("ОШИБКА! Некорректное имя фильма",
+                violations.iterator().next().getMessage());
     }
 
     @Test
@@ -79,14 +90,14 @@ class FilmControllerTest {
         film.setReleaseDate(LocalDate.of(2010,7,16));
         film.setDuration(Duration.ofMinutes(148));
         // Добавляем фильм и проверяем результат
-        Film addedFilm = filmController.postFilm(film);
-        assertNotNull(addedFilm.getId());
-        assertEquals("Inception", addedFilm.getName());
+        ResponseEntity<Film> addedFilm = filmController.postFilm(film);
+        assertNotNull(addedFilm.getBody().getId());
+        assertEquals("Inception", addedFilm.getBody().getName());
         assertEquals(1, filmController.getFilms().size());
         film.setName("Blade runner 2049");
-        Film putFilm = filmController.putFilm(film);
-        assertNotNull(addedFilm.getId());
-        assertEquals("Blade runner 2049", addedFilm.getName());
+        ResponseEntity<Film> putFilm = filmController.putFilm(film);
+        assertNotNull(addedFilm.getBody().getId());
+        assertEquals("Blade runner 2049", addedFilm.getBody().getName());
         assertEquals(1, filmController.getFilms().size());
     }
 }

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,13 +10,13 @@ import java.time.LocalDate;
 @Schema(description = "Пользователь приложения")
 public class User {
     @Schema(description = "Id пользователя", example = "1")
-    Long id;
+    private Long id;
     @Schema(description = "Email пользователя", example = "sergiskvor@yandex.ru")
-    String email;
+    private String email;
     @Schema(description = "Логин пользователя", example = "serg")
-    String login;
+    private String login;
     @Schema(description = "Имя пользователя", example = "sergei")
-    String name;
+    private String name;
     @Schema(description = "Дата рождения пользователя", example = "1998-02-11")
-    LocalDate birthday;
+    private LocalDate birthday;
 }
